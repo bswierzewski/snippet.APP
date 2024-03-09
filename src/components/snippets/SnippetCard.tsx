@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
-import { components } from '@/clients/snippetApi';
+import { components } from '@/lib/api/snippet';
 import { Button } from '../ui/button';
 
 import CopyToClipboard from 'react-copy-to-clipboard';
