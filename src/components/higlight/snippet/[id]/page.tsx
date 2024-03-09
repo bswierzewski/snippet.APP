@@ -3,10 +3,9 @@
 import { SubmitHandler } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import SnippetForm, { SnippetFormSchema } from '@/components/snippets/SnippetForm';
-import { SkeletonCard } from '@/components/SkeletonCard';
+import { SkeletonCard } from '@/components/skeleton/SkeletonCard';
 import { GetSnippet } from '@/hooks/queries';
 import { UpdateSnippet } from '@/hooks/mutations';
-import { Code } from 'lucide-react';
 
 export default function SnippetEdit({ params }: { params: { id: number } }) {
   const router = useRouter();
