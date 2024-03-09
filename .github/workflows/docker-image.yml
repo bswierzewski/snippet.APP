@@ -25,5 +25,5 @@ jobs:
         with:
           context: .
           file: Dockerfile
-          tags: wordbyte/snippet_app:latest
+          tags: wordbyte/snippet_client:latest
           push: true
