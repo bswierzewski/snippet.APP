@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM node:21-alpine AS base
 
 # Install bash required to run scripts
 RUN apk add curl bash
