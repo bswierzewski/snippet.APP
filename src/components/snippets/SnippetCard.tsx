@@ -43,9 +43,7 @@ export default function SnippetCard({ snippet }: Props) {
         <CardDescription>{snippet.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px] flex overflow-auto hljs">
-          <CodeHighlighter code={snippet.code ?? ''} />
-        </div>
+        <div className="h-[300px] flex overflow-auto hljs">{/* <CodeHighlighter code={snippet.code ?? ''} /> */}</div>
       </CardContent>
       <CardFooter className="flex justify-between gap-2">
         <div className="flex gap-2">
