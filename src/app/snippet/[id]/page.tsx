@@ -30,10 +30,7 @@ export default function SnippetEdit({ params }: { params: { id: number } }) {
         title: data.title ?? '',
         description: data.description ?? '',
         docs: data.docs ?? '',
-        tags: data.tags
-          ?.toString()
-          .split(',')
-          .map((tag) => tag.trim())
+        tags: data.tags?.map((x) => x.value) ?? []
       }
     });
   };
@@ -53,7 +50,7 @@ export default function SnippetEdit({ params }: { params: { id: number } }) {
         description: data.description ?? '',
         docs: data.docs ?? '',
         language: data.language ?? '',
-        tags: data.tags?.join(',') ?? '',
+        tags: data.tags?.map((tag) => ({ value: tag })) ?? [],
         title: data.title ?? ''
       }}
       mode="update"

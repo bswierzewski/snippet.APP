@@ -19,6 +19,7 @@ type Props = {
 };
 
 export default function SnippetCard({ snippet }: Props) {
+  const maxBadgeCount = 3;
   const [isDeleted, setDeleted] = useState<boolean>();
   const queryClient = useQueryClient();
   const { mutate, isPending } = DeleteSnippet({
@@ -32,23 +33,27 @@ export default function SnippetCard({ snippet }: Props) {
 
   return (
     <Card className={isDeleted ? 'opacity-30' : ''}>
-      <div className="p-2 flex gap-2 justify-end">
-        {snippet.tags?.map((tag, index) => (
-          <Badge key={index} variant="outline">
-            {tag}
-          </Badge>
-        ))}
+      <div className="p-2 flex">
+        <Badge variant="destructive">{snippet.language}</Badge>
+        <div className="flex-1"></div>
+        <div className="flex gap-2">
+          {snippet.tags?.slice(0, maxBadgeCount).map((tag, index) => (
+            <Badge key={index}>{tag}</Badge>
+          ))}
+          {snippet.tags && snippet.tags.length > maxBadgeCount && <Badge>+{snippet.tags.length - maxBadgeCount}</Badge>}
+        </div>
       </div>
-      <Separator className="m-1" />
+      <Separator className="my-1" />
       <CardHeader className="-mt-[15px]">
         <CardTitle>{snippet.title}</CardTitle>
         <CardDescription>{snippet.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px] flex overflow-auto hljs">
+        <div className="h-[300px] flex overflow-auto bg-accent px-2">
           <CodeHighlighter code={snippet.code ?? ''} />
         </div>
       </CardContent>
+      <Separator className="mb-3" />
       <CardFooter className="flex justify-between gap-2">
         {isPending ? (
           <Button disabled variant="destructive">

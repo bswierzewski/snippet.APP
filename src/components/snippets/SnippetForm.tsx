@@ -1,16 +1,17 @@
 'use client';
 
-import React from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Plus } from 'lucide-react';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Separator } from '../ui/separator';
+import { Badge } from '../ui/badge';
 
 type Props = {
   mode: 'create' | 'update';
@@ -25,20 +26,40 @@ const schema = z.object({
   language: z.string().min(1),
   code: z.string().min(1),
   docs: z.string(),
-  tags: z.string()
+  tags: z.array(
+    z.object({
+      value: z.string()
+    })
+  )
 });
 
 export type SnippetFormSchema = z.infer<typeof schema>;
 
 export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }: Props) {
+  const [tagInputValue, setTagInputValue] = useState('');
   const {
     handleSubmit,
     register,
-    formState: { errors }
+    formState: { errors },
+    control
   } = useForm<SnippetFormSchema>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues
   });
+
+  const { fields, append, remove } = useFieldArray({ control, name: 'tags' });
+
+  const textToTags = (text: string) => {
+    const tags = text.split(',');
+
+    tags.forEach((tag) => {
+      append({
+        value: tag
+      });
+    });
+
+    setTagInputValue('');
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -46,9 +67,9 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
         <CardHeader>
           <CardTitle>{mode == 'create' ? 'Create new snippets' : 'Update snippets details '}</CardTitle>
         </CardHeader>
-        <Separator className="mb-2" />
+        <Separator className="mb-2 bg-secondary" />
         <CardContent>
-          <div className="flex flex-col md:flex-row gap-2">
+          <div className="mb-5 flex flex-col md:flex-row gap-2">
             <div className="grow">
               <Label htmlFor="title">Title*</Label>
               <Input
@@ -77,17 +98,38 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
             type="text"
             placeholder="Bash script to copy all files from scr to dest"
             {...register('description')}
-            className={`${errors.description ? 'placeholder-red-300 border border-red-400' : ''}`}
+            className={`mb-5 ${errors.description ? 'placeholder-red-300 border border-red-400' : ''}`}
           />
 
           <Label htmlFor="tags">Tags</Label>
-          <Input
-            id="tags"
-            type="text"
-            placeholder="automation, files, loop"
-            {...register('tags')}
-            className={`${errors.tags ? 'placeholder-red-300 border border-red-400' : ''}`}
-          />
+          <div className="flex">
+            <Input
+              id="tags"
+              type="text"
+              value={tagInputValue}
+              placeholder="automation, files, loop"
+              className={`rounded-e-none ${errors.tags ? 'placeholder-red-300 border border-red-400' : ''}`}
+              onChange={(e) => setTagInputValue(e.target.value)}
+            />
+            <Button
+              type="button"
+              onClick={() => {
+                textToTags(tagInputValue as string);
+              }}
+              className="rounded-s-none"
+              size="icon"
+            >
+              <Plus />
+            </Button>
+          </div>
+
+          <div className="flex gap-2 my-2 mb-5">
+            {fields?.map((field, index) => (
+              <Badge key={index} className="text-sm" onClick={() => remove(index)}>
+                {field.value}
+              </Badge>
+            ))}
+          </div>
 
           <Label htmlFor="code">Snippet code*</Label>
           <Textarea
@@ -95,7 +137,7 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
             rows={10}
             placeholder="cp -r ./src ./dest"
             {...register('code')}
-            className={`${errors.code ? 'placeholder-red-300 border border-red-400' : ''}`}
+            className={`mb-5 ${errors.code ? 'placeholder-red-300 border border-red-400' : ''}`}
           />
           <br />
 

@@ -21,10 +21,7 @@ export default function SnippetCreate() {
         title: data.title ?? '',
         description: data.description ?? '',
         docs: data.docs ?? '',
-        tags: data.tags
-          ?.toString()
-          .split(',')
-          .map((tag) => tag.trim())
+        tags: data.tags?.map((x) => x.value) ?? []
       }
     });
   };
