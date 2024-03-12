@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useSnippetStore } from '@/stores/snippet';
 import { GetSnippets } from '@/hooks/queries';
 
-export default function Search({ className }: any) {
+export default function Search() {
   const router = useRouter();
   const pathname = usePathname();
   const searchTerm = useSnippetStore((state) => state.searchTerm);
@@ -22,7 +22,7 @@ export default function Search({ className }: any) {
   }
 
   return (
-    <div className={`flex w-[50%] items-center border-2 rounded-full py-2 shadow-sm ${className}`}>
+    <div className={`w-[50%] items-center border-2 rounded-full py-2 shadow-sm hidden md:flex`}>
       <input
         onKeyDown={(e: any) => {
           if (e.key === 'Enter') search();

@@ -9,9 +9,10 @@ import Link from 'next/link';
 import { Badge } from '../ui/badge';
 import CodeHighlighter from '../higlight/CodeHighlighter';
 import { DeleteSnippet } from '@/hooks/mutations';
-import { Loader2 } from 'lucide-react';
+import { Files, Loader2, Pencil, X } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { GET_SNIPPETS } from '@/hooks/queries';
+import { Separator } from '../ui/separator';
 
 type Props = {
   snippet: components['schemas']['SnippetDto'];
@@ -38,6 +39,7 @@ export default function SnippetCard({ snippet }: Props) {
           </Badge>
         ))}
       </div>
+      <Separator className="m-1" />
       <CardHeader className="-mt-[15px]">
         <CardTitle>{snippet.title}</CardTitle>
         <CardDescription>{snippet.description}</CardDescription>
@@ -48,34 +50,39 @@ export default function SnippetCard({ snippet }: Props) {
         </div>
       </CardContent>
       <CardFooter className="flex justify-between gap-2">
-        <div className="flex gap-2">
-          <Button>
-            <Link href={`/snippet/${snippet.id}`}>Edit</Link>
+        {isPending ? (
+          <Button disabled variant="destructive">
+            <Loader2 className="h-4 w-4 animate-spin" />
           </Button>
-          {isPending ? (
-            <Button disabled variant="destructive">
-              <Loader2 className="h-4 w-4 animate-spin" />
-            </Button>
-          ) : (
-            <Button
-              variant="destructive"
-              onClick={() =>
-                mutate({
-                  params: {
-                    path: {
-                      id: snippet.id ?? 0
-                    }
+        ) : (
+          <Button
+            size="icon"
+            variant="destructive"
+            onClick={() =>
+              mutate({
+                params: {
+                  path: {
+                    id: snippet.id ?? 0
                   }
-                })
-              }
-            >
-              Delete
+                }
+              })
+            }
+          >
+            <X />
+          </Button>
+        )}
+        <div className="flex gap-2">
+          <Button size="icon">
+            <Link href={`/snippet/${snippet.id}`}>
+              <Pencil />
+            </Link>
+          </Button>
+          <CopyToClipboard onCopy={() => toast.success('Code coppied')} text={snippet.code ?? ''}>
+            <Button size="icon">
+              <Files />
             </Button>
-          )}
+          </CopyToClipboard>
         </div>
-        <CopyToClipboard onCopy={() => toast.success('Code coppied')} text={snippet.code ?? ''}>
-          <Button>Copy</Button>
-        </CopyToClipboard>
       </CardFooter>
     </Card>
   );

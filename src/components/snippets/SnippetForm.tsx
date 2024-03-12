@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Separator } from '../ui/separator';
 
 type Props = {
   mode: 'create' | 'update';
@@ -43,10 +44,11 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
     <form onSubmit={handleSubmit(onSubmit)}>
       <Card>
         <CardHeader>
-          <CardTitle>Snippets details</CardTitle>
+          <CardTitle>{mode == 'create' ? 'Create new snippets' : 'Update snippets details '}</CardTitle>
         </CardHeader>
+        <Separator className="mb-2" />
         <CardContent>
-          <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row gap-2">
             <div className="grow">
               <Label htmlFor="title">Title*</Label>
               <Input
@@ -58,19 +60,6 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
               />
             </div>
             <div className="grow">
-              <Label htmlFor="shortDescription">Short description</Label>
-              <Input
-                id="shortDescription"
-                type="text"
-                placeholder="Bash script to copy all files from scr to dest"
-                {...register('description')}
-                className={`${errors.description ? 'placeholder-red-300 border border-red-400' : ''}`}
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-2">
-            <div className="grow">
               <Label htmlFor="language">Language*</Label>
               <Input
                 id="language"
@@ -80,17 +69,25 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
                 className={`${errors.language ? 'placeholder-red-300 border border-red-400' : ''}`}
               />
             </div>
-            <div className="grow">
-              <Label htmlFor="tags">Tags</Label>
-              <Input
-                id="tags"
-                type="text"
-                placeholder="automation, files, loop"
-                {...register('tags')}
-                className={`${errors.tags ? 'placeholder-red-300 border border-red-400' : ''}`}
-              />
-            </div>
           </div>
+
+          <Label htmlFor="shortDescription">Short description</Label>
+          <Input
+            id="shortDescription"
+            type="text"
+            placeholder="Bash script to copy all files from scr to dest"
+            {...register('description')}
+            className={`${errors.description ? 'placeholder-red-300 border border-red-400' : ''}`}
+          />
+
+          <Label htmlFor="tags">Tags</Label>
+          <Input
+            id="tags"
+            type="text"
+            placeholder="automation, files, loop"
+            {...register('tags')}
+            className={`${errors.tags ? 'placeholder-red-300 border border-red-400' : ''}`}
+          />
 
           <Label htmlFor="code">Snippet code*</Label>
           <Textarea
