@@ -43,7 +43,7 @@ export default function SnippetCard({ snippet }: Props) {
           {snippet.tags && snippet.tags.length > maxBadgeCount && <Badge>+{snippet.tags.length - maxBadgeCount}</Badge>}
         </div>
       </div>
-      <Separator className="my-1" />
+      <Separator className="my-1 bg-accent" />
       <CardHeader className="-mt-[15px]">
         <CardTitle>{snippet.title}</CardTitle>
         <CardDescription>{snippet.description}</CardDescription>
@@ -53,7 +53,7 @@ export default function SnippetCard({ snippet }: Props) {
           <CodeHighlighter code={snippet.code ?? ''} />
         </div>
       </CardContent>
-      <Separator className="mb-3" />
+      <Separator className="mb-3 bg-accent" />
       <CardFooter className="flex justify-between gap-2">
         {isPending ? (
           <Button disabled variant="destructive">
