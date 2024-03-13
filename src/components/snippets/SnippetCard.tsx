@@ -34,7 +34,7 @@ export default function SnippetCard({ snippet }: Props) {
   return (
     <Card className={isDeleted ? 'opacity-30' : ''}>
       <div className="p-2 flex">
-        <Badge variant="destructive">{snippet.language}</Badge>
+        <Badge variant="secondary">{snippet.language}</Badge>
         <div className="flex-1"></div>
         <div className="flex gap-2">
           {snippet.tags?.slice(0, maxBadgeCount).map((tag, index) => (
@@ -43,17 +43,22 @@ export default function SnippetCard({ snippet }: Props) {
           {snippet.tags && snippet.tags.length > maxBadgeCount && <Badge>+{snippet.tags.length - maxBadgeCount}</Badge>}
         </div>
       </div>
-      <Separator className="my-1 bg-accent" />
+      <Separator className="my-1" />
       <CardHeader className="-mt-[15px]">
         <CardTitle>{snippet.title}</CardTitle>
         <CardDescription>{snippet.description}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="h-[300px] flex overflow-auto bg-accent px-2">
+      <CardContent className="relative">
+        <div className="h-[300px] flex bg-background overflow-auto px-2 ">
           <CodeHighlighter code={snippet.code ?? ''} />
+          <CopyToClipboard onCopy={() => toast.success('Code copied')} text={snippet.code ?? ''}>
+            <Button variant="ghost" className="absolute bottom-10 right-10" size="icon">
+              <Files />
+            </Button>
+          </CopyToClipboard>
         </div>
       </CardContent>
-      <Separator className="mb-3 bg-accent" />
+      <Separator className="mb-3" />
       <CardFooter className="flex justify-between gap-2">
         {isPending ? (
           <Button disabled variant="destructive">
@@ -76,18 +81,11 @@ export default function SnippetCard({ snippet }: Props) {
             <X />
           </Button>
         )}
-        <div className="flex gap-2">
-          <Button size="icon">
-            <Link href={`/snippet/${snippet.id}`}>
-              <Pencil />
-            </Link>
-          </Button>
-          <CopyToClipboard onCopy={() => toast.success('Code coppied')} text={snippet.code ?? ''}>
-            <Button size="icon">
-              <Files />
-            </Button>
-          </CopyToClipboard>
-        </div>
+        <Button size="icon">
+          <Link href={`/snippet/${snippet.id}`}>
+            <Pencil />
+          </Link>
+        </Button>
       </CardFooter>
     </Card>
   );

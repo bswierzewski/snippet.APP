@@ -36,7 +36,6 @@ const schema = z.object({
 export type SnippetFormSchema = z.infer<typeof schema>;
 
 export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }: Props) {
-  const [tagInputValue, setTagInputValue] = useState('');
   const {
     handleSubmit,
     register,
@@ -46,17 +45,18 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
     resolver: zodResolver(schema),
     defaultValues: defaultValues
   });
-
   const { fields, append, remove } = useFieldArray({ control, name: 'tags' });
 
-  const textToTags = (text: string) => {
-    const tags = text.split(',');
+  const [tagInputValue, setTagInputValue] = useState('');
+  const appendTags = () => {
+    if (tagInputValue.length <= 0) return;
 
-    tags.forEach((tag) => {
-      append({
-        value: tag
-      });
-    });
+    append(
+      tagInputValue
+        .split(',')
+        .filter((tag) => tag.trim().length > 0)
+        .map((tag) => ({ value: tag }))
+    );
 
     setTagInputValue('');
   };
@@ -110,11 +110,15 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
               placeholder="automation, files, loop"
               className={`rounded-e-none ${errors.tags ? 'placeholder-red-300 border border-red-400' : ''}`}
               onChange={(e) => setTagInputValue(e.target.value)}
+              onBlur={() => appendTags()}
+              onKeyDown={(e) => {
+                if (e.key == 'Enter') appendTags();
+              }}
             />
             <Button
               type="button"
               onClick={() => {
-                textToTags(tagInputValue as string);
+                appendTags();
               }}
               className="rounded-s-none"
               size="icon"
