@@ -67,7 +67,7 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
         <CardHeader>
           <CardTitle>{mode == 'create' ? 'Create new snippets' : 'Update snippets details '}</CardTitle>
         </CardHeader>
-        <Separator className="mb-2 bg-secondary" />
+        <Separator className="mb-2" />
         <CardContent>
           <div className="mb-5 flex flex-col md:flex-row gap-2">
             <div className="grow">
