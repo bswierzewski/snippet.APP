@@ -14,7 +14,7 @@ export default function Navbar() {
   const session = useSession();
 
   return (
-    <div className="flex justify-center h-20 sticky top-0 shadow-lg p-5 border-b-2 bg-background">
+    <div className="flex justify-center h-20 sticky top-0 shadow-lg p-5 bg-background z-50">
       <div className="flex w-full max-w-screen-2xl items-center justify-between">
         <Logo />
         <Search />
