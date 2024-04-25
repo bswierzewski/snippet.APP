@@ -3,6 +3,28 @@ info:
   title: 'Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'
   version: '1.0'
 paths:
+  /api/Images:
+    post:
+      tags:
+        - Images
+      operationId: UploadImage
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: array
+              items:
+                type: string
+                format: binary
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
   /api/Snippets:
     get:
       tags:
@@ -124,6 +146,11 @@ components:
           items:
             type: string
           nullable: true
+        imageUrls:
+          type: array
+          items:
+            type: string
+          nullable: true
       additionalProperties: false
     SnippetDto:
       type: object
@@ -149,6 +176,11 @@ components:
         isPinned:
           type: boolean
         tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+        imageUrls:
           type: array
           items:
             type: string
@@ -181,6 +213,11 @@ components:
           type: string
           nullable: true
         tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+        imageUrls:
           type: array
           items:
             type: string

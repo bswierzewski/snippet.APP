@@ -3,15 +3,19 @@
  * Do not make direct changes to the file.
  */
 
+
 export interface paths {
-  '/api/Snippets': {
-    get: operations['GetSnippets'];
-    post: operations['CreateSnippet'];
+  "/api/Images": {
+    post: operations["UploadImage"];
   };
-  '/api/Snippets/{id}': {
-    get: operations['GetSnippet'];
-    put: operations['UpdateSnippet'];
-    delete: operations['DeleteSnippet'];
+  "/api/Snippets": {
+    get: operations["GetSnippets"];
+    post: operations["CreateSnippet"];
+  };
+  "/api/Snippets/{id}": {
+    get: operations["GetSnippet"];
+    put: operations["UpdateSnippet"];
+    delete: operations["DeleteSnippet"];
   };
 }
 
@@ -26,6 +30,7 @@ export interface components {
       code: string;
       docs?: string | null;
       tags?: string[] | null;
+      imageUrls?: string[] | null;
     };
     SnippetDto: {
       /** Format: int32 */
@@ -37,6 +42,7 @@ export interface components {
       docs?: string | null;
       isPinned?: boolean;
       tags?: string[] | null;
+      imageUrls?: string[] | null;
     };
     UpdateSnippetCommand: {
       /** Format: int32 */
@@ -47,6 +53,7 @@ export interface components {
       code: string;
       docs?: string | null;
       tags?: string[] | null;
+      imageUrls?: string[] | null;
     };
   };
   responses: never;
@@ -61,6 +68,22 @@ export type $defs = Record<string, never>;
 export type external = Record<string, never>;
 
 export interface operations {
+
+  UploadImage: {
+    requestBody?: {
+      content: {
+        "multipart/form-data": string[];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": string[];
+        };
+      };
+    };
+  };
   GetSnippets: {
     parameters: {
       query?: {
@@ -71,7 +94,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['SnippetDto'][];
+          "application/json": components["schemas"]["SnippetDto"][];
         };
       };
     };
@@ -79,14 +102,14 @@ export interface operations {
   CreateSnippet: {
     requestBody?: {
       content: {
-        'application/json': components['schemas']['CreateSnippetCommand'];
+        "application/json": components["schemas"]["CreateSnippetCommand"];
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': number;
+          "application/json": number;
         };
       };
     };
@@ -101,7 +124,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['SnippetDto'];
+          "application/json": components["schemas"]["SnippetDto"];
         };
       };
     };
@@ -114,7 +137,7 @@ export interface operations {
     };
     requestBody?: {
       content: {
-        'application/json': components['schemas']['UpdateSnippetCommand'];
+        "application/json": components["schemas"]["UpdateSnippetCommand"];
       };
     };
     responses: {
