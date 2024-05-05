@@ -12,19 +12,15 @@ paths:
         content:
           multipart/form-data:
             schema:
-              type: array
-              items:
-                type: string
-                format: binary
+              type: string
+              format: binary
       responses:
         '200':
           description: OK
           content:
-            application/json:
+            text/plain:
               schema:
-                type: array
-                items:
-                  type: string
+                type: string
   /api/Snippets:
     get:
       tags:

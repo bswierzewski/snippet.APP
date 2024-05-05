@@ -72,14 +72,14 @@ export interface operations {
   UploadImage: {
     requestBody?: {
       content: {
-        "multipart/form-data": string[];
+        "multipart/form-data": string;
       };
     };
     responses: {
       /** @description OK */
       200: {
         content: {
-          "application/json": string[];
+          "text/plain": string;
         };
       };
     };

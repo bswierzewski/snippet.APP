@@ -1,17 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Loader2, Plus } from 'lucide-react';
+import { Loader2, Plus, Upload } from 'lucide-react';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Separator } from '../ui/separator';
 import { Badge } from '../ui/badge';
+import { UploadImage } from '@/hooks/mutations';
 
 type Props = {
   mode: 'create' | 'update';
@@ -36,6 +37,11 @@ const schema = z.object({
 export type SnippetFormSchema = z.infer<typeof schema>;
 
 export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }: Props) {
+  const { mutate, isPending: isUpladPending } = UploadImage({
+    onSuccess(data, variables, context) {
+      console.log(data);
+    }
+  });
   const {
     handleSubmit,
     register,
@@ -45,9 +51,11 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
     resolver: zodResolver(schema),
     defaultValues: defaultValues
   });
+
   const { fields, append, remove } = useFieldArray({ control, name: 'tags' });
 
   const [tagInputValue, setTagInputValue] = useState('');
+
   const appendTags = () => {
     if (tagInputValue.length <= 0) return;
 
@@ -59,6 +67,12 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
     );
 
     setTagInputValue('');
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      mutate({ body: e.target.files[0] });
+    }
   };
 
   return (
@@ -143,6 +157,17 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
             {...register('code')}
             className={`mb-5 ${errors.code ? 'placeholder-red-300 border border-red-400' : ''}`}
           />
+
+          <Label htmlFor="picture">Picture</Label>
+          <div className="flex">
+            <div className="grid w-full items-center gap-1.5">
+              <Input id="picture" type="file" multiple className="rounded-e-none" onChange={handleFileChange} />
+            </div>
+            <Button type="button" onClick={() => {}} className="rounded-s-none" size="icon">
+              <Upload className={`${isUpladPending ? 'animate-spin' : ''}`} />
+            </Button>
+          </div>
+
           <br />
 
           <Label htmlFor="docs">Snippet documentation</Label>

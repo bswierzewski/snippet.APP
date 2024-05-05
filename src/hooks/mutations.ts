@@ -9,6 +9,7 @@ type MutationOptions<R, T> = UseMutationOptions<R, any, RequestBodyOption<T> & P
 const ADD_SNIPPET = '/api/Snippets';
 const DELETE_SNIPPET = '/api/Snippets/{id}';
 const UPDATE_SNIPPET = '/api/Snippets/{id}';
+const UPLOAD_IMAGE = '/api/Images';
 
 export function CreateSnippet(options?: MutationOptions<number | undefined, paths[typeof ADD_SNIPPET]['post']>) {
   return useMutation({
@@ -39,6 +40,25 @@ export function DeleteSnippet(options?: MutationOptions<void, paths[typeof DELET
       await client.DELETE(DELETE_SNIPPET, {
         params: params
       });
+    },
+    ...options
+  });
+}
+
+export function UploadImage(options?: MutationOptions<any, any>) {
+  return useMutation({
+    mutationFn: async ({body, params}) => {      
+      const { data } = await client.POST(UPLOAD_IMAGE, {
+        // any required for typescript satysfying
+        body: body,
+        bodySerializer: (body) => {
+          const formData = new FormData();
+          // any required for typescript satysfying
+          formData.set('file', body as any);
+          return formData;
+        }
+      });
+      return data;
     },
     ...options
   });
