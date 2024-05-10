@@ -3,25 +3,28 @@
 import { SubmitHandler } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import SnippetForm, { SnippetFormSchema } from '@/components/snippets/SnippetForm';
-import { CreateSnippet } from '@/hooks/mutations';
+import { useCreateSnippet } from '@/lib/api/snippet';
 
 export default function SnippetCreate() {
   const router = useRouter();
-  const { mutate, isPending } = CreateSnippet({
-    onSuccess() {
-      router.push('/');
+  const { mutate, isPending } = useCreateSnippet({
+    mutation: {
+      onSuccess() {
+        router.push('/');
+      }
     }
   });
 
   const onSubmit: SubmitHandler<SnippetFormSchema> = (data) => {
     mutate({
-      body: {
+      data: {
         code: data.code ?? '',
         language: data.language ?? '',
         title: data.title ?? '',
         description: data.description ?? '',
         docs: data.docs ?? '',
-        tags: data.tags?.map((x) => x.value) ?? []
+        tags: data.tags?.map((x) => x.value) ?? [],
+        imageUrls: data.imageUrls?.map((x) => x.value) ?? []
       }
     });
   };

@@ -1,18 +1,23 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Loader2, Plus, Upload } from 'lucide-react';
-import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Separator } from '../ui/separator';
+import { Loader2, Plus, Trash2, Upload } from 'lucide-react';
+import Image from 'next/image';
+import { useRef, useState } from 'react';
+import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
+import * as z from 'zod';
+
+import { useUploadImage } from '@/lib/api/snippet';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+
 import { Badge } from '../ui/badge';
-import { UploadImage } from '@/hooks/mutations';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
+import { Separator } from '../ui/separator';
 
 type Props = {
   mode: 'create' | 'update';
@@ -31,17 +36,30 @@ const schema = z.object({
     z.object({
       value: z.string()
     })
+  ),
+  imageUrls: z.array(
+    z.object({
+      value: z.string()
+    })
   )
 });
 
 export type SnippetFormSchema = z.infer<typeof schema>;
 
 export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }: Props) {
-  const { mutate, isPending: isUpladPending } = UploadImage({
-    onSuccess(data, variables, context) {
-      console.log(data);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [tagInputValue, setTagInputValue] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const { mutate, isPending: isUpladPending } = useUploadImage({
+    mutation: {
+      onSuccess(data, variables, context) {
+        appendUrl({ value: data });
+        resetFileInput();
+      }
     }
   });
+
   const {
     handleSubmit,
     register,
@@ -52,14 +70,13 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
     defaultValues: defaultValues
   });
 
-  const { fields, append, remove } = useFieldArray({ control, name: 'tags' });
-
-  const [tagInputValue, setTagInputValue] = useState('');
+  const { fields: tags, append: appendTag, remove: removeTag } = useFieldArray({ control, name: 'tags' });
+  const { fields: images, append: appendUrl, remove: removeUrl } = useFieldArray({ control, name: 'imageUrls' });
 
   const appendTags = () => {
     if (tagInputValue.length <= 0) return;
 
-    append(
+    appendTag(
       tagInputValue
         .split(',')
         .filter((tag) => tag.trim().length > 0)
@@ -69,10 +86,16 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
     setTagInputValue('');
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      mutate({ body: e.target.files[0] });
+  const uploadFile = () => {
+    if (selectedFile) mutate({ data: { file: selectedFile } });
+  };
+
+  const resetFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
+
+    setSelectedFile(null);
   };
 
   return (
@@ -142,8 +165,8 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
           </div>
 
           <div className="flex gap-2 my-2 mb-5">
-            {fields?.map((field, index) => (
-              <Badge key={index} className="text-sm" onClick={() => remove(index)}>
+            {tags?.map((field, index) => (
+              <Badge key={index} className="text-sm" onClick={() => removeTag(index)}>
                 {field.value}
               </Badge>
             ))}
@@ -161,11 +184,63 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
           <Label htmlFor="picture">Picture</Label>
           <div className="flex">
             <div className="grid w-full items-center gap-1.5">
-              <Input id="picture" type="file" multiple className="rounded-e-none" onChange={handleFileChange} />
+              <Input
+                ref={fileInputRef}
+                id="picture"
+                type="file"
+                className="rounded-e-none"
+                onChange={(e) => (e.target.files ? setSelectedFile(e.target.files[0]) : {})}
+              />
             </div>
-            <Button type="button" onClick={() => {}} className="rounded-s-none" size="icon">
-              <Upload className={`${isUpladPending ? 'animate-spin' : ''}`} />
+            <Button
+              type="button"
+              onClick={() => uploadFile()}
+              className="rounded-s-none"
+              size="icon"
+              disabled={isUpladPending}
+            >
+              <Upload className={`${isUpladPending ? 'animate-pulse' : ''}`} />
             </Button>
+          </div>
+
+          <br />
+
+          <div className="flex justify-center">
+            <Carousel className="w-full md:w-[90%]">
+              <CarouselContent>
+                {images.map((image, index) => (
+                  <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                    <div className="p-1">
+                      <Card>
+                        <CardContent className="flex aspect-[4/3] items-center justify-center p-6">
+                          <Image
+                            src={image.value}
+                            alt="img"
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            style={{ height: '100%', width: '100%' }}
+                          />
+                        </CardContent>
+                        <div className="relative">
+                          <Button
+                            type="button"
+                            className="absolute right-[45%] -top-[46px] bg-background rounded-full"
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => removeUrl(index)}
+                          >
+                            <Trash2 className="text-foreground" />
+                          </Button>
+                        </div>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious type="button" className="hidden md:flex" />
+              <CarouselNext type="button" className="hidden md:flex" />
+            </Carousel>
           </div>
 
           <br />

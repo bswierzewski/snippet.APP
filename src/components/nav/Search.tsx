@@ -3,7 +3,7 @@
 import { Loader, SearchCheck } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSnippetStore } from '@/stores/snippet';
-import { GetSnippets } from '@/hooks/queries';
+import { useGetSnippets } from '@/lib/api/snippet';
 
 export default function Search() {
   const router = useRouter();
@@ -11,10 +11,7 @@ export default function Search() {
   const searchTerm = useSnippetStore((state) => state.searchTerm);
   const setSearchTerm = useSnippetStore((state) => state.setSearchTerm);
 
-  const { isFetching, refetch } = GetSnippets({
-    params: { query: { searchTerm: searchTerm } },
-    reactQuery: { enabled: false }
-  });
+  const { isFetching, refetch } = useGetSnippets({ searchTerm: searchTerm }, { query: { enabled: false } });
 
   function search() {
     if (pathname !== '/') router.push('/');

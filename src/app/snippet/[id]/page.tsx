@@ -4,33 +4,31 @@ import { SubmitHandler } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import SnippetForm, { SnippetFormSchema } from '@/components/snippets/SnippetForm';
 import { SkeletonCard } from '@/components/skeleton/SkeletonCard';
-import { GetSnippet } from '@/hooks/queries';
-import { UpdateSnippet } from '@/hooks/mutations';
+import { useGetSnippet, useUpdateSnippet } from '@/lib/api/snippet';
 
 export default function SnippetEdit({ params }: { params: { id: number } }) {
   const router = useRouter();
-  const { data } = GetSnippet({ params: { path: { id: params.id } }, reactQuery: { gcTime: 0 } });
-  const { mutate, isPending } = UpdateSnippet({
-    onSuccess() {
-      router.push('/');
+  const { data } = useGetSnippet(params.id, { query: { gcTime: 0 } });
+  const { mutate, isPending } = useUpdateSnippet({
+    mutation: {
+      onSuccess() {
+        router.push('/');
+      }
     }
   });
 
   const onSubmit: SubmitHandler<SnippetFormSchema> = (data) => {
     mutate({
-      params: {
-        path: {
-          id: params.id
-        }
-      },
-      body: {
+      id: params.id,
+      data: {
         id: params.id,
         code: data.code ?? '',
         language: data.language ?? '',
         title: data.title ?? '',
         description: data.description ?? '',
         docs: data.docs ?? '',
-        tags: data.tags?.map((x) => x.value) ?? []
+        tags: data.tags?.map((x) => x.value) ?? [],
+        imageUrls: data.imageUrls?.map((x) => x.value) ?? []
       }
     });
   };
@@ -51,7 +49,8 @@ export default function SnippetEdit({ params }: { params: { id: number } }) {
         docs: data.docs ?? '',
         language: data.language ?? '',
         tags: data.tags?.map((tag) => ({ value: tag })) ?? [],
-        title: data.title ?? ''
+        title: data.title ?? '',
+        imageUrls: data.imageUrls?.map((url) => ({ value: url })) ?? []
       }}
       mode="update"
       isPending={isPending}

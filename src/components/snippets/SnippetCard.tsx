@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
-import { components } from '@/lib/api/snippet';
 import { Button } from '../ui/button';
 
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -8,26 +7,27 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { Badge } from '../ui/badge';
 import CodeHighlighter from '../higlight/CodeHighlighter';
-import { DeleteSnippet } from '@/hooks/mutations';
 import { Files, Loader2, Pencil, X } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
-import { GET_SNIPPETS } from '@/hooks/queries';
 import { Separator } from '../ui/separator';
+import { SnippetDto, getGetSnippetsQueryKey, useDeleteSnippet } from '@/lib/api/snippet';
 
 type Props = {
-  snippet: components['schemas']['SnippetDto'];
+  snippet: SnippetDto;
 };
 
 export default function SnippetCard({ snippet }: Props) {
   const maxBadgeCount = 3;
   const [isDeleted, setDeleted] = useState<boolean>();
   const queryClient = useQueryClient();
-  const { mutate, isPending } = DeleteSnippet({
-    onSuccess() {
-      setDeleted(true);
-    },
-    onSettled() {
-      queryClient.invalidateQueries({ queryKey: [GET_SNIPPETS] });
+  const { mutate, isPending } = useDeleteSnippet({
+    mutation: {
+      onSuccess() {
+        setDeleted(true);
+      },
+      onSettled() {
+        queryClient.invalidateQueries({ queryKey: getGetSnippetsQueryKey() });
+      }
     }
   });
 
@@ -70,11 +70,7 @@ export default function SnippetCard({ snippet }: Props) {
             variant="destructive"
             onClick={() =>
               mutate({
-                params: {
-                  path: {
-                    id: snippet.id ?? 0
-                  }
-                }
+                id: snippet.id ?? 0
               })
             }
           >

@@ -12,8 +12,10 @@ paths:
         content:
           multipart/form-data:
             schema:
-              type: string
-              format: binary
+              $ref: '#/components/schemas/ImageUploadCommand'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ImageUploadCommand'
       responses:
         '200':
           description: OK
@@ -147,6 +149,16 @@ components:
           items:
             type: string
           nullable: true
+      additionalProperties: false
+    ImageUploadCommand:
+      required:
+        - file
+      type: object
+      properties:
+        file:
+          minLength: 1
+          type: string
+          format: binary
       additionalProperties: false
     SnippetDto:
       type: object

@@ -13,13 +13,16 @@ export interface ProvidersProps {
 
 export function Providers({ children }: ProvidersProps) {
   // Create a client
-  const [queryClient] = useState(() => new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false
-      }
-    }
-  }));
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: false
+          }
+        }
+      })
+  );
 
   return (
     <SessionProvider>

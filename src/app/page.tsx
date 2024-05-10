@@ -6,17 +6,17 @@ import { Button } from '@/components/ui/button';
 import SnippetCard from '@/components/snippets/SnippetCard';
 import Link from 'next/link';
 import { CheckCheck, LoaderIcon, Plus } from 'lucide-react';
-import { GetSnippets } from '@/hooks/queries';
 import { Separator } from '@/components/ui/separator';
+import { useGetSnippets } from '@/lib/api/snippet';
 
 export default function Home() {
   const session = useSession();
   const searchTerm = useSnippetStore((state) => state.searchTerm);
 
-  const { data, isFetching } = GetSnippets({
-    params: { query: { searchTerm: searchTerm } },
-    reactQuery: { enabled: session.status === 'authenticated' }
-  });
+  const { data, isFetching } = useGetSnippets(
+    { searchTerm: searchTerm },
+    { query: { enabled: session.status === 'authenticated' } }
+  );
 
   if (session.status != 'authenticated')
     return (
@@ -74,7 +74,7 @@ export default function Home() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {data?.map((snippet) => (
+          {data.map((snippet) => (
             <SnippetCard key={snippet.id} snippet={snippet} />
           ))}
         </div>
