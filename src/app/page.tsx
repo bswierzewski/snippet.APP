@@ -1,13 +1,15 @@
 'use client';
 
-import { signIn, useSession } from 'next-auth/react';
 import { useSnippetStore } from '@/stores/snippet';
-import { Button } from '@/components/ui/button';
-import SnippetCard from '@/components/snippets/SnippetCard';
-import Link from 'next/link';
 import { CheckCheck, LoaderIcon, Plus } from 'lucide-react';
+import { signIn, useSession } from 'next-auth/react';
+import Link from 'next/link';
+
+import { getGetSnippetsQueryKey, useGetSnippets } from '@/lib/api/snippet';
+
+import SnippetCard from '@/components/snippets/SnippetCard';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { useGetSnippets } from '@/lib/api/snippet';
 
 export default function Home() {
   const session = useSession();

@@ -1,13 +1,17 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { Session } from 'next-auth';
 import { getSession, signOut } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
-export const AXIOS_INSTANCE = Axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL }); // use your own URL here or environment variable
+const AXIOS_INSTANCE = Axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL });
+
+let session: Session | null = null;
 
 // Add interceptors
 AXIOS_INSTANCE.interceptors.request.use(
   async (config) => {
-    const session = await getSession();
+    if (session === null) session = await getSession();
+
     if (session) {
       config.headers.Authorization = `Bearer ${session.access_token}`;
     }
@@ -25,6 +29,7 @@ AXIOS_INSTANCE.interceptors.response.use(
   (error: AxiosError) => {
     if (error && error.response && error.response.status >= 400) {
       if (error.response.status === 401) {
+        session = null;
         signOut({ redirect: false });
       }
 
@@ -44,8 +49,7 @@ export const customInstance = <T>(config: AxiosRequestConfig, options?: AxiosReq
     cancelToken: source.token
   }).then(({ data }) => data);
 
-  // @ts-ignore
-  promise.cancel = () => {
+  (promise as any).cancel = () => {
     source.cancel('Query was cancelled');
   };
 

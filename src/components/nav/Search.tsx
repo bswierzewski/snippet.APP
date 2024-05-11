@@ -1,21 +1,39 @@
 'use client';
 
+import { useSnippetStore } from '@/stores/snippet';
 import { Loader, SearchCheck } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useSnippetStore } from '@/stores/snippet';
+import { ChangeEvent, useState } from 'react';
+
 import { useGetSnippets } from '@/lib/api/snippet';
 
 export default function Search() {
+  // State
+  const [value, setValue] = useState('');
+
+  // Hooks
   const router = useRouter();
   const pathname = usePathname();
-  const searchTerm = useSnippetStore((state) => state.searchTerm);
-  const setSearchTerm = useSnippetStore((state) => state.setSearchTerm);
 
-  const { isFetching, refetch } = useGetSnippets({ searchTerm: searchTerm }, { query: { enabled: false } });
+  // Store
+  // Store
+  const { searchTerm, setSearchTerm } = useSnippetStore((state) => ({
+    searchTerm: state.searchTerm,
+    setSearchTerm: state.setSearchTerm
+  }));
 
+  // Queries
+  const { isFetching, refetch } = useGetSnippets({ searchTerm }, { query: { enabled: false } });
+
+  // Functions
   function search() {
     if (pathname !== '/') router.push('/');
+    setSearchTerm(value);
     refetch();
+  }
+
+  function handleInputOnChange(e: ChangeEvent<HTMLInputElement>) {
+    setValue(e.target.value);
   }
 
   return (
@@ -24,7 +42,7 @@ export default function Search() {
         onKeyDown={(e: any) => {
           if (e.key === 'Enter') search();
         }}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={handleInputOnChange}
         type="text"
         placeholder="Search by title or tags"
         className="
