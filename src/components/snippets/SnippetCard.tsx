@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { Files, Loader2, Pencil, X } from 'lucide-react';
+import { Files, Loader2, NotebookText, Pencil, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -76,11 +76,18 @@ export default function SnippetCard({ snippet }: Props) {
             <X />
           </Button>
         )}
-        <Button size="icon">
-          <Link href={`/snippet/edit/${snippet.id}`}>
-            <Pencil />
-          </Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button size="icon">
+            <Link href={`/snippet/view/${snippet.id}`}>
+              <NotebookText />
+            </Link>
+          </Button>
+          <Button size="icon" variant="outline">
+            <Link href={`/snippet/edit/${snippet.id}`}>
+              <Pencil />
+            </Link>
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );
