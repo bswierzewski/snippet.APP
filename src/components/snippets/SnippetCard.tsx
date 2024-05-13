@@ -1,16 +1,17 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { Files, Loader2, Pencil, X } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-
 import CopyToClipboard from 'react-copy-to-clipboard';
 import toast from 'react-hot-toast';
-import Link from 'next/link';
-import { Badge } from '../ui/badge';
-import CodeHighlighter from '../higlight/CodeHighlighter';
-import { Files, Loader2, Pencil, X } from 'lucide-react';
-import { useQueryClient } from '@tanstack/react-query';
-import { Separator } from '../ui/separator';
+
 import { SnippetDto, getGetSnippetsQueryKey, useDeleteSnippet } from '@/lib/api/snippet';
+
+import CodeHighlighter from '../higlight/CodeHighlighter';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { Separator } from '../ui/separator';
 
 type Props = {
   snippet: SnippetDto;
@@ -37,9 +38,7 @@ export default function SnippetCard({ snippet }: Props) {
         <Badge variant="secondary">{snippet.language}</Badge>
         <div className="flex-1"></div>
         <div className="flex gap-2">
-          {snippet.tags?.slice(0, maxBadgeCount).map((tag, index) => (
-            <Badge key={index}>{tag}</Badge>
-          ))}
+          {snippet.tags?.slice(0, maxBadgeCount).map((tag, index) => <Badge key={index}>{tag}</Badge>)}
           {snippet.tags && snippet.tags.length > maxBadgeCount && <Badge>+{snippet.tags.length - maxBadgeCount}</Badge>}
         </div>
       </div>
@@ -78,7 +77,7 @@ export default function SnippetCard({ snippet }: Props) {
           </Button>
         )}
         <Button size="icon">
-          <Link href={`/snippet/${snippet.id}`}>
+          <Link href={`/snippet/edit/${snippet.id}`}>
             <Pencil />
           </Link>
         </Button>

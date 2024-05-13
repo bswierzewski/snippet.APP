@@ -5,7 +5,7 @@ import { CheckCheck, LoaderIcon, Plus } from 'lucide-react';
 import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
 
-import { getGetSnippetsQueryKey, useGetSnippets } from '@/lib/api/snippet';
+import { useGetSnippets } from '@/lib/api/snippet';
 
 import SnippetCard from '@/components/snippets/SnippetCard';
 import { Button } from '@/components/ui/button';

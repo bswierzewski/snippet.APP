@@ -238,8 +238,12 @@ export default function SnippetForm({ mode, onSubmit, defaultValues, isPending }
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious type="button" className="hidden md:flex" />
-              <CarouselNext type="button" className="hidden md:flex" />
+              {images.length > 1 && (
+                <>
+                  <CarouselPrevious type="button" className="hidden md:flex" />
+                  <CarouselNext type="button" className="hidden md:flex" />
+                </>
+              )}
             </Carousel>
           </div>
 

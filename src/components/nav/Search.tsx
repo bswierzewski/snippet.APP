@@ -61,7 +61,7 @@ export default function Search() {
           <Loader size={34} className="rounded-full p-2 cursor-pointer mx-2 animate-spin" />
         </button>
       ) : (
-        <button onClick={search}>
+        <button onClick={() => search()}>
           <SearchCheck size={34} className="rounded-full p-2 cursor-pointer mx-2" />
         </button>
       )}
