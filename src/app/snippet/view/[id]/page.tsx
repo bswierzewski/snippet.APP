@@ -1,18 +1,13 @@
 'use client';
 
-import { Files } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import toast from 'react-hot-toast';
 
 import { useGetSnippet } from '@/lib/api/snippet';
 
 import CodeHighlighter from '@/components/higlight/CodeHighlighter';
 import { SkeletonCard } from '@/components/skeleton/SkeletonCard';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Separator } from '@/components/ui/separator';
 
