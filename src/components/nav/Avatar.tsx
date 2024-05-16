@@ -1,5 +1,10 @@
 'use client';
 
+import { Cloud, LogOut } from 'lucide-react';
+import { signOut, useSession } from 'next-auth/react';
+import Image from 'next/image';
+import React from 'react';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,10 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { Cloud, LogOut } from 'lucide-react';
-import React from 'react';
-import Image from 'next/image';
-import { signOut, useSession } from 'next-auth/react';
 
 export default function Avatar() {
   const session = useSession();
@@ -34,7 +35,14 @@ export default function Avatar() {
           <span>Features</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>
+        <DropdownMenuItem
+          onClick={() =>
+            signOut({
+              callbackUrl: `https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN}/v2/logout?client_id=${process.env.NEXT_PUBLIC_AUTH0_CLIENTID}&returnTo=${process.env.NEXT_PUBLIC_NEXTAUTH_URL}`,
+              redirect: true
+            })
+          }
+        >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>
