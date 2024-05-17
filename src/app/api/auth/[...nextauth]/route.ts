@@ -37,6 +37,8 @@ const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
+      // For few seconds
+      console.log({ domain: process.env.AUTH0_DOMAIN, url: new URL(url) });
       // Allows relative callback URLs
       if (url.startsWith('/')) return `${baseUrl}${url}`;
       // Allows callback URLs to auth0
