@@ -2,7 +2,7 @@
 # replace-variables.sh
 
 # Define a list of mandatory environment variables to check
-MANDATORY_VARS=("NEXT_PUBLIC_API_URL" "NEXT_PUBLIC_AUTH0_DOMAIN" "NEXT_PUBLIC_AUTH0_CLIENTID" "NEXT_PUBLIC_NEXTAUTH_URL")
+MANDATORY_VARS=("NEXT_PUBLIC_API_URL")
 
 # Define a list of optional environment variables (no check needed)
 OPTIONAL_VARS=()
