@@ -1,8 +1,10 @@
+import { Providers } from './providers';
 import '@/styles/globals.css';
+import type { Metadata } from 'next';
+import { PublicEnvScript } from 'next-runtime-env';
 
 import { siteConfig } from '@/config/site';
-import type { Metadata } from 'next';
-import { Providers } from './providers';
+
 import Navbar from '@/components/nav/Navbar';
 
 export const metadata: Metadata = {
@@ -17,7 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning>
-      <head />
+      <head>
+        <PublicEnvScript />
+      </head>
       <body className="min-h-screen">
         <Providers>
           <div className="relative flex flex-col h-screen">

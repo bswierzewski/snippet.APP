@@ -1,11 +1,10 @@
 'use client';
 
-import { ReactNode, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ThemeProvider } from 'next-themes';
-import Navbar from '@/components/nav/Navbar';
-import { Toaster } from 'react-hot-toast';
 import { SessionProvider } from 'next-auth/react';
+import { ThemeProvider } from 'next-themes';
+import { ReactNode, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 export interface ProvidersProps {
   children: ReactNode;

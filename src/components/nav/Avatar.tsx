@@ -2,6 +2,7 @@
 
 import { Cloud, LogOut } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
+import { env } from 'next-runtime-env';
 import Image from 'next/image';
 import React from 'react';
 
@@ -38,7 +39,7 @@ export default function Avatar() {
         <DropdownMenuItem
           onClick={() =>
             signOut({
-              callbackUrl: `https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN}/v2/logout?client_id=${process.env.NEXT_PUBLIC_AUTH0_CLIENTID}&returnTo=${process.env.NEXT_PUBLIC_NEXTAUTH_URL}`,
+              callbackUrl: `https://${env('NEXT_PUBLIC_AUTH0_DOMAIN')}/v2/logout?client_id=${env('NEXT_PUBLIC_AUTH0_CLIENTID')}&returnTo=${env('NEXT_PUBLIC_NEXTAUTH_URL')}`,
               redirect: true
             })
           }
