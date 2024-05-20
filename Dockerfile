@@ -1,7 +1,5 @@
 FROM node:21-alpine AS base
 
-# Install bash required to run scripts
-RUN apk add curl bash
 # Install dependencies only when needed
 FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
@@ -22,9 +20,6 @@ COPY . .
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
-
-# Public env required for script to replace
-ENV NEXT_PUBLIC_API_URL=BAKED_NEXT_PUBLIC_API_URL
 
 RUN npm run build
 
@@ -50,18 +45,10 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy scripts
-COPY --chown=nextjs:nodejs /scripts ./scripts
-
-USER root
-RUN chmod 555 ./scripts/*
 USER nextjs
 
 EXPOSE 3000
 
-# set hostname to localhost
-ENV HOSTNAME "0.0.0.0"
-
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD ["scripts/start.sh"]
+CMD HOSTNAME="0.0.0.0" node server.js

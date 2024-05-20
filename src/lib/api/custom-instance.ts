@@ -1,9 +1,10 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { Session } from 'next-auth';
 import { getSession, signOut } from 'next-auth/react';
+import { env } from 'next-runtime-env';
 import toast from 'react-hot-toast';
 
-const AXIOS_INSTANCE = Axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL });
+const AXIOS_INSTANCE = Axios.create({ baseURL: env('NEXT_PUBLIC_API_URL') });
 
 let session: Session | null = null;
 
