@@ -20,7 +20,7 @@ export default function Logo() {
   };
 
   const logoSrc = useMemo(() => {
-    if (!mounted) return '/default-logo.svg'; // Default or placeholder logo
+    if (!mounted) return '/logo-light.svg'; // Default or placeholder logo
     return theme === 'dark' ? '/logo-dark.svg' : '/logo-light.svg';
   }, [theme, mounted]);
 
