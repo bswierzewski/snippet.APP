@@ -50,11 +50,6 @@ export default function SnippetCard({ snippet }: Props) {
       <CardContent className="relative">
         <div className="h-[300px] flex bg-background overflow-auto px-2 ">
           <CodeHighlighter code={snippet.code ?? ''} />
-          <CopyToClipboard onCopy={() => toast.success('Code copied')} text={snippet.code ?? ''}>
-            <Button variant="ghost" className="absolute bottom-10 right-10" size="icon">
-              <Files />
-            </Button>
-          </CopyToClipboard>
         </div>
       </CardContent>
       <Separator className="mb-3" />
@@ -77,15 +72,20 @@ export default function SnippetCard({ snippet }: Props) {
           </Button>
         )}
         <div className="flex gap-2">
-          <Button size="icon">
+          <Button size="icon" variant="ghost">
+            <Link href={`/snippet/edit/${snippet.id}`}>
+              <Pencil />
+            </Link>
+          </Button>
+          <Button size="icon" variant="ghost">
             <Link href={`/snippet/view/${snippet.id}`}>
               <NotebookText />
             </Link>
           </Button>
-          <Button size="icon" variant="outline">
-            <Link href={`/snippet/edit/${snippet.id}`}>
-              <Pencil />
-            </Link>
+          <Button size="icon" variant="ghost">
+            <CopyToClipboard onCopy={() => toast.success('Code copied')} text={snippet.code ?? ''}>
+              <Files />
+            </CopyToClipboard>
           </Button>
         </div>
       </CardFooter>
