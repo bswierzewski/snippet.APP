@@ -72,21 +72,21 @@ export default function SnippetCard({ snippet }: Props) {
           </Button>
         )}
         <div className="flex gap-2">
-          <Button size="icon" variant="ghost">
-            <Link href={`/snippet/edit/${snippet.id}`}>
+          <Link href={`/snippet/edit/${snippet.id}`}>
+            <Button size="icon" variant="ghost">
               <Pencil />
-            </Link>
-          </Button>
-          <Button size="icon" variant="ghost">
-            <Link href={`/snippet/view/${snippet.id}`}>
+            </Button>
+          </Link>
+          <Link href={`/snippet/view/${snippet.id}`}>
+            <Button size="icon" variant="ghost">
               <NotebookText />
-            </Link>
-          </Button>
-          <Button size="icon" variant="ghost">
-            <CopyToClipboard onCopy={() => toast.success('Code copied')} text={snippet.code ?? ''}>
+            </Button>
+          </Link>
+          <CopyToClipboard onCopy={() => toast.success('Code copied')} text={snippet.code ?? ''}>
+            <Button size="icon" variant="ghost">
               <Files />
-            </CopyToClipboard>
-          </Button>
+            </Button>
+          </CopyToClipboard>
         </div>
       </CardFooter>
     </Card>
