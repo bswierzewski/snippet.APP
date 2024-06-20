@@ -3,6 +3,8 @@
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 
+import logo from '../../../public/blue_horizontal.png';
+
 export default function Logo() {
   const router = useRouter();
   const pathname = usePathname();
@@ -13,7 +15,7 @@ export default function Logo() {
 
   return (
     <div onClick={doReset} className="cursor-pointer">
-      <Image src="/blue_horizontal.png" height={120} width={120} alt="logo" priority />
+      <Image src={logo} height={120} width={120} alt="logo" priority />
     </div>
   );
 }
