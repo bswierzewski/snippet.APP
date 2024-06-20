@@ -15,7 +15,7 @@ export default function Logo() {
 
   return (
     <div onClick={doReset} className="cursor-pointer">
-      <Image src={logo} height={120} width={120} alt="logo" priority />
+      <Image src={logo} alt="logo" sizes="120px" />
     </div>
   );
 }
