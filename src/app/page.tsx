@@ -20,17 +20,19 @@ export default function Home() {
     { query: { enabled: status === 'authenticated' } }
   );
 
-  if (status !== 'authenticated') {
-    return <UnauthenticatedView status={status} />;
-  }
-
   return (
     <>
       <div className="flex flex-col justify-center mb-5">
         <LoadingIndicator isFetching={isFetching} />
         <Separator />
       </div>
-      {isLoading ? <SnippetLoading /> : <SnippetsGrid data={data} />}
+      {status !== 'authenticated' ? (
+        <UnauthenticatedView status={status} />
+      ) : isLoading ? (
+        <SnippetLoading />
+      ) : (
+        <SnippetsGrid data={data} />
+      )}
     </>
   );
 }

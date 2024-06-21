@@ -33,9 +33,9 @@ AXIOS_INSTANCE.interceptors.response.use(
         session = null;
         signOut({ redirect: false });
       }
-
-      toast.error(`${error.message}`);
     }
+
+    toast.error(`${error.message}`);
 
     return Promise.reject(error);
   }
