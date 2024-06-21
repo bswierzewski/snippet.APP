@@ -28,14 +28,14 @@ AXIOS_INSTANCE.interceptors.response.use(
     return response;
   },
   (error: AxiosError) => {
-    if (error && error.response && error.response.status >= 400) {
-      if (error.response.status === 401) {
+      if (error?.response?.status === 401) {
         session = null;
         signOut({ redirect: false });
       }
-    }
 
-    toast.error(`${error.message}`);
+    if (!Axios.isCancel(error)) {
+      toast.error((<AxiosError>error).message);
+    }
 
     return Promise.reject(error);
   }
