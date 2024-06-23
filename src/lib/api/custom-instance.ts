@@ -24,9 +24,7 @@ AXIOS_INSTANCE.interceptors.request.use(
 );
 
 AXIOS_INSTANCE.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  response => response,
   (error: AxiosError) => {
       if (error?.response?.status === 401) {
         session = null;
@@ -34,7 +32,9 @@ AXIOS_INSTANCE.interceptors.response.use(
       }
 
     if (!Axios.isCancel(error)) {
-      toast.error((<AxiosError>error).message);
+      const axiosError = <any>error;
+      const errorMessage = axiosError?.response?.data?.detail || axiosError.message;
+        toast.error(errorMessage);
     }
 
     return Promise.reject(error);
