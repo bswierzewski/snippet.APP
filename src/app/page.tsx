@@ -22,16 +22,18 @@ export default function Home() {
 
   return (
     <>
-      <div className="flex flex-col justify-center mb-5">
-        <LoadingIndicator isFetching={isFetching} />
-        <Separator />
-      </div>
       {status !== 'authenticated' ? (
         <UnauthenticatedView status={status} />
       ) : isLoading ? (
         <SnippetLoading />
       ) : (
-        <SnippetsGrid data={data} />
+        <>
+          <div className="flex flex-col justify-center mb-5">
+            <LoadingIndicator isFetching={isFetching} />
+            <Separator />
+          </div>
+          <SnippetsGrid data={data} />
+        </>
       )}
     </>
   );
